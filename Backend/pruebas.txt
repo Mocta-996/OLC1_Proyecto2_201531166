@@ -1,0 +1,11 @@
+writeline("esto es un string",22,'e');
+writeline('e');
+writeline(!false);
+writeline(55.25 +10);
+writeline(22);
+writeline(22 >21);
+writeline(22<21);
+writeline(22 >=21);
+writeline(22<=10);
+writeline(22!=5);
+writeline(22);
