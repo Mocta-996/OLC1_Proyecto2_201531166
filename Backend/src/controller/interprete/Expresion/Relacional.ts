@@ -12,7 +12,7 @@ export class Relacional extends Expresion {
 
         const rightValue = this.right.execute(ambito);
         if (this.tipo == TipoRelacional.IGUALACION) {
-            const result = leftValue.value == rightValue.value
+            const result = leftValue.value == rightValue.value;
             return { value: result, type: Type.BOOLEANO }
         } else if (this.tipo == TipoRelacional.DIFERENCIACION) {
             const result = leftValue.value != rightValue.value

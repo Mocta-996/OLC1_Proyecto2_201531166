@@ -12,7 +12,26 @@ export class Length extends Instruccion {
     }
     public execute(ambito: Ambito): any {
         let len = this.value.execute(ambito);
-
+                
+        try {
+            let lenret = len.value.length;
+            //len.tamanio !=null || len.tamanio != undefined
+            if(len.tamanio != null || len.tamanio != undefined){
+                return { value: len.tamanio,type:Type.ENTERO}
+           
+            }
+            else if(lenret != undefined){
+                return { value: lenret,type:Type.ENTERO}
+            }
+            else {
+                 throw new Error_(this.line, this.column, 'Semantico', 'error funcion length: '+ len.value +' '+ len.type );
+            }
+            
+            
+        } catch (error) {
+                throw new Error_(this.line, this.column, 'Semantico', 'error funcion length: variable =  '+ len.value +' tipo = '+ len.type );
+        }
+        /*
         if(len.type == Type.CADENA){
             let lenret = len.value.length;
             return { value: lenret,type:Type.ENTERO}
@@ -27,9 +46,9 @@ export class Length extends Instruccion {
         }
         else 
         {
-            throw new Error_(this.line, this.column, 'Semantico', 'error length: '+ len.value +' '+ len.type );
+            throw new Error_(this.line, this.column, 'Semantico', 'error funcion length: '+ len.value +' '+ len.type );
      
-        }
+        }*/
      
     }
 }

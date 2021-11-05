@@ -2,6 +2,7 @@ import {Request,Response} from 'express';
 import { Ambito } from './interprete/Mas/Ambito';
 import {ListaWriteline} from './interprete/Instruccion/ListaWriteline';
 import { ListaError } from './interprete/Instruccion/ListaError';
+import { Funcion } from './interprete/Instruccion/Funcion';
 //import Excepcion from './analizador/Excepciones/Excepcion';
 //import Arbol from './analizador/tablaSimbolos/Arbol';
 //import tablaSimbolos from './analizador/tablaSimbolos/tablaSimbolos';
@@ -28,18 +29,32 @@ class rjpController{
         try{
             const ast = parser.parse(text)
             console.log(ast)
+            const ambito = new Ambito(null);
             try {
-              const ambito = new Ambito(null)
-              for (const inst of ast) {
-                inst.execute(ambito)
+              for (const inst of ast) 
+              {
+                  if(inst instanceof Funcion){
+                    inst.execute(ambito)
+                  } 
               }
             } catch (error) {
               console.log(error)
             }
+            try{
+                for (const inst of ast){
+                    if(!(inst instanceof Funcion)){
+                        const retornar = inst.execute(ambito);
+                    }
+                   
+
+                }
+            }catch(error){
+                console.log(error);
+            }
             let resultado =  ListaWriteline;
             let errores = ListaError;
             let mensaje= resultado.join("\n") +"\n"+errores.join("\n");
-            //res.send({consola:resultado.join("\n"),Errores:errores.join("\n")});
+           
             res.send({consola:mensaje});
             ListaWriteline.splice(0,ListaWriteline.length);
             ListaError.splice(0,ListaError.length);

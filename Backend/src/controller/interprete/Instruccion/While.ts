@@ -21,6 +21,15 @@ export class While extends Instruccion {
                     break
                 } else if (retorno.type == 'Continue') {
                     continue
+                }else if(retorno.type == 'Return' && retorno.value == undefined){
+                    break
+                }
+                else if(retorno.type == 'Return' && retorno.value != undefined){
+                    return {value:retorno.value, type:retorno.type};
+                    break;
+                   
+                }else if(retorno.type == 'Return' && retorno.value == undefined){
+                    break;
                 }
             }
             value = this.condicion.execute(ambito)

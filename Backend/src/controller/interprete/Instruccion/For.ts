@@ -42,11 +42,15 @@ export class For extends Instruccion {
                 } else if (retorno.type == 'Continue') {
                     continue
                 }
-            }
+                else if(retorno.type == 'Return'){
 
-                     
+                }
+            }
             if (contador == 1000)
-            { break }; // condicion para parar evitar ciclos infinitos
+            { 
+                break 
+            
+            }; // condicion para parar evitar ciclos infinitos
 
             // ejecutar incremento
             this.incremento.execute(ambito);

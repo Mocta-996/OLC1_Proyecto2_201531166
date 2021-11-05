@@ -33,7 +33,8 @@ export class DeclararVector extends Instruccion {
             if(this.value == null){
                 if(this.tipo1 == this.tipo2){
                     let ta = this.tamaño?.execute(ambito);
-                    ambito.setVal(actual,this.value,this.tipo1, this.line, this.column,ta?.value,Type.VECTOR);
+                    
+                    ambito.setVal(actual,[],this.tipo1, this.line, this.column,ta?.value,Type.VECTOR);
                     /*if(this.tipo1 == 0){
                         ambito.setVal(actual,[],this.tipo1, this.line, this.column,this.tamaño);
                     }else if(this.tipo1 == 1){

@@ -13,7 +13,7 @@ export class Acceso extends Expresion {
 
     public execute(ambito: Ambito): Retorno {
         let value = ambito.getVal(this.id)
-        if (value != null) return { value: value.valor, type: value.type }
+        if (value != null) return { value: value.valor, type: value.type, tamanio:value.tamanio}
         throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id)
 
     }

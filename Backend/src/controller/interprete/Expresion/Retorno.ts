@@ -12,7 +12,8 @@ export enum Type {
 // valor y tipo de retorno
 export type Retorno = {
     value: any,
-    type: Type
+    type: Type,
+    tamanio?:number
 }
 
 // tabla de tipo dominante para operaciones aritmeticas

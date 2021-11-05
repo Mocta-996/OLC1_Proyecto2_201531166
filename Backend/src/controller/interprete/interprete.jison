@@ -1,10 +1,3 @@
-/*
-    Organizacion de Lenguajes y Compiladores 1 "A"
-    José Puac
-    Clase 8
-    Jison
-*/
-
 /* Definición Léxica */
 %lex
 
@@ -48,6 +41,10 @@
 "while"             return 'WHILE';
 "for"               return 'FOR';
 "do"                return 'DO';
+"void"              return 'VOID';
+"continue"          return 'CONTINUE';
+"return"            return 'RETURN';
+"truncate"          return 'TRUNCATE';
 // aritmeticos
 "+"                 return 'MAS';
 "-"                 return 'MENOS';
@@ -128,6 +125,9 @@
     const {ToUpper} = require('./Instruccion/ToUpper');
     const {Length} = require('./Instruccion/Length');
     const {Break} = require('./Instruccion/Break');
+    const {Continue} = require('./Instruccion/Continue');
+    const {Return} = require('./Instruccion/Return');
+    const {Truncate} = require('./Instruccion/Truncate');
 
     const {If} = require('./Instruccion/If');
     const {Statement} = require('./Instruccion/Statement');
@@ -136,6 +136,9 @@
     const {While} = require('./Instruccion/While');
     const {DoWhile} = require('./Instruccion/DoWhile');
     const {For} = require('./Instruccion/For');
+
+    const {Funcion} = require('./Instruccion/Funcion');
+    const {LlamadaFuncion} = require('./Instruccion/LlamadaFuncion');
 
 %}
 %}
@@ -173,7 +176,11 @@ INSTRUCCION
     | CICLOWHILE             { $$ =$1; }
     | SENTENCIAFOR          { $$ =$1; }
     | SENTENCIADOWHILE      { $$ =$1; }
+    | SENTENCIAFUNCION     { $$ =$1; }
+    | LLAMADAFUNCION        { $$ =$1; }
+    | RETORNAR PTCOMA        { $$ =$1; }
     | BREAK PTCOMA {$$=new Break(@1.first_line, @1.first_column)}
+    | CONTINUE PTCOMA {$$=new Continue(@1.first_line, @1.first_column)}
 	| error PTCOMA{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
      new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico:'  + yytext);}
 ;
@@ -195,6 +202,7 @@ DECLARACION
     | TIPOS DECLARAVARIOS  IGUAL EXPRESION  PTCOMA  { {$$ = new Declarar($1,$2,$4,@1.first_line, @1.first_column)} }
     | TIPOS DECLARAVARIOS  IGUAL TERNARIO  PTCOMA  { {$$ = new Declarar($1,$2,$4,@1.first_line, @1.first_column)} }
     | TIPOS DECLARAVARIOS  IGUAL CASTEO PTCOMA  { {$$ = new Declarar($1,$2,$4,@1.first_line, @1.first_column)} }
+    | TIPOS DECLARAVARIOS  IGUAL LLAMADAFUNCION  { {$$ = new Declarar($1,$2,$4,@1.first_line, @1.first_column)} }
     //constructor(tipo1:number,id: string[], value: Expresion[], line: number, column: number,tamaño?:number,tipo2?:number)
     | TIPOS DECLARAVARIOS  CORIZR CORDER IGUAL NEW TIPOS CORIZR  EXPRESION CORDER PTCOMA { {$$ = new DeclararVector($1,$2,null,@1.first_line, @1.first_column,$9,$7)} } // vector sin datos iniciales 
     | TIPOS DECLARAVARIOS  CORIZR CORDER IGUAL LLAVEIZQ  LISTAVALORES LLAVEDER PTCOMA { {$$ = new DeclararVector($1,$2,$7,@1.first_line, @1.first_column,null,null)} } // vector con datos iniciales
@@ -217,6 +225,7 @@ ASIGNACION
     : ID IGUAL EXPRESION PTCOMA { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)}  }
     | ID IGUAL TERNARIO  PTCOMA  { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)} }
     | ID IGUAL CASTEO  PTCOMA  { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)} }
+    | ID IGUAL LLAMADAFUNCION { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)} }
     | EXPRESION  PTCOMA 
     //constructor(id: string,posicion:Expresion, value: Expresion, line: number, column: number) {
     | ID CORIZR EXPRESION CORDER  IGUAL EXPRESION PTCOMA  { {$$ = new AsignarVector($1,$3,$6,@1.first_line, @1.first_column)} }
@@ -226,10 +235,16 @@ ASIGNACION
     | SETVALUE PARIZQ ID COMA EXPRESION COMA EXPRESION PARDER PTCOMA  { {$$ = new ModificarLista($3,$5,$7,@1.first_line, @1.first_column)} }
 ;
 
+ASIGNACION2
+    : ID IGUAL EXPRESION  { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)}  }
+    | ID IGUAL TERNARIO    { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)} }
+    | ID IGUAL CASTEO   { {$$ = new Asignar($1,$3,@1.first_line, @1.first_column)} }
+;
 // ====================================== INCREMENTO Y DECREMENTO ======================================
 
 // ===================================== CASTEO DE VALORES O VARIABLES ==============================
-CASTEO  :PARIZQ TIPOCASTEO PARDER EXPRESION { {$$ = new Casteo($2,$4,@1.first_line, @1.first_column,null)} } 
+CASTEO  
+    : PARIZQ TIPOCASTEO PARDER EXPRESION { {$$ = new Casteo($2,$4,@1.first_line, @1.first_column,null)} } 
 ;
 TIPOCASTEO
     :RENTERO                 {$$ = 0;}
@@ -300,6 +315,9 @@ CICLOWHILE
 SENTENCIAFOR
     : FOR PARIZQ DECLARACION   EXPRESION PTCOMA EXPRESION PARDER STATEMENT { $$ = new For($3, $4,$6,$8, @1.first_line,@1.first_column);}
     | FOR PARIZQ ASIGNACION   EXPRESION PTCOMA EXPRESION PARDER STATEMENT { $$ = new For($3, $4,$6,$8, @1.first_line,@1.first_column);}
+    | FOR PARIZQ DECLARACION   EXPRESION PTCOMA ASIGNACION2 PARDER STATEMENT { $$ = new For($3, $4,$6,$8, @1.first_line,@1.first_column);}
+    | FOR PARIZQ ASIGNACION   EXPRESION PTCOMA ASIGNACION2 PARDER STATEMENT { $$ = new For($3, $4,$6,$8, @1.first_line,@1.first_column);}
+
 ;
 // ========================================= SENTENCIA DO WHILE ============================
 
@@ -307,6 +325,35 @@ SENTENCIADOWHILE
     : DO STATEMENT WHILE PARIZQ EXPRESION PARDER PTCOMA { $$ = new DoWhile($5, $2,  @1.first_line, @1.first_column)}
 ;   
 
+
+// ========================================= FUNCIONES ======================================================
+
+SENTENCIAFUNCION 
+    : TIPOS ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,'funcion', @1.first_line, @1.first_column,$1);}
+    | TIPOS ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],'funcion', @1.first_line, @1.first_column,$1);}
+    | VOID ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,'void', @1.first_line, @1.first_column,null);}
+    | VOID ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],'void', @1.first_line, @1.first_column,null);}
+;
+
+PARAMETROS
+    :PARAMETROS  COMA TIPOS ID { $1.push([$3,$4]); $$ =$1 }
+    |TIPOS ID  {$$ =[];$$.push([$1,$2])}
+;
+
+// ======================================== LLAMADA DE FUNCIONES ===========================================
+LLAMADAFUNCION
+    : ID PARIZQ PARDER PTCOMA   {$$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column);}
+    | ID PARIZQ LISTAPARAMETROS PARDER PTCOMA  { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column);}
+;
+LISTAPARAMETROS
+    : LISTAPARAMETROS COMA EXPRESION { $1.push($3);$$ = $1;}
+    | EXPRESION  {$$ = [$1];}
+;
+
+RETORNAR
+    : RETURN      {$$=new Return(@1.first_line, @1.first_column,null)}
+    | RETURN EXPRESION   {$$=new Return(@1.first_line, @1.first_column,$2)}
+;
 
 EXPRESION
     : EXPRESION MAS EXPRESION           { $$= new Aritmetica($1,$3,TipoAritmetica.SUMA, @1.first_line, @1.first_column); }
@@ -343,9 +390,11 @@ EXPRESION
     | ID CORIZR EXPRESION CORDER         {$$= new AccesoVector($1,$3, @1.first_line, @1.first_column)}
     | GETVALUE PARIZQ ID COMA EXPRESION PARDER   { {$$ = new AccesoLista($3,$5,@1.first_line, @1.first_column)} }
 
-    |TOLOWER PARIZQ EXPRESION PARDER       { {$$ = new ToLower($3,@1.first_line, @1.first_column)} }
-    |TOUPPER PARIZQ EXPRESION PARDER       { {$$ = new ToUpper($3,@1.first_line, @1.first_column)} }
-    |LENGTH PARIZQ EXPRESION PARDER        { {$$ = new Length($3,@1.first_line, @1.first_column)} }
+    | TOLOWER PARIZQ EXPRESION PARDER       {$$ = new ToLower($3,@1.first_line, @1.first_column)} 
+    | TOUPPER PARIZQ EXPRESION PARDER        {$$ = new ToUpper($3,@1.first_line, @1.first_column)} 
+    | LENGTH PARIZQ EXPRESION PARDER         {$$ = new Length($3,@1.first_line, @1.first_column)} 
+    | TRUNCATE PARIZQ EXPRESION PARDER         {$$ = new Truncate($3,@1.first_line, @1.first_column)} 
+    
 
 ;
 
