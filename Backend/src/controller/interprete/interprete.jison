@@ -45,6 +45,9 @@
 "continue"          return 'CONTINUE';
 "return"            return 'RETURN';
 "truncate"          return 'TRUNCATE';
+"round"             return 'ROUND';
+"typeof"            return 'TYPEOF';
+"tostring"          return 'TOSTRING';
 // aritmeticos
 "+"                 return 'MAS';
 "-"                 return 'MENOS';
@@ -128,6 +131,9 @@
     const {Continue} = require('./Instruccion/Continue');
     const {Return} = require('./Instruccion/Return');
     const {Truncate} = require('./Instruccion/Truncate');
+    const {Round} = require('./Instruccion/Round');
+    const {Typeof} = require('./Instruccion/Typeof');
+    const {Tostring} = require('./Instruccion/Tostring');
 
     const {If} = require('./Instruccion/If');
     const {Statement} = require('./Instruccion/Statement');
@@ -394,6 +400,9 @@ EXPRESION
     | TOUPPER PARIZQ EXPRESION PARDER        {$$ = new ToUpper($3,@1.first_line, @1.first_column)} 
     | LENGTH PARIZQ EXPRESION PARDER         {$$ = new Length($3,@1.first_line, @1.first_column)} 
     | TRUNCATE PARIZQ EXPRESION PARDER         {$$ = new Truncate($3,@1.first_line, @1.first_column)} 
+    | ROUND PARIZQ EXPRESION PARDER         {$$ = new Round($3,@1.first_line, @1.first_column)} 
+    | TYPEOF PARIZQ EXPRESION PARDER         {$$ = new Typeof($3,@1.first_line, @1.first_column)} 
+    | TOSTRING PARIZQ EXPRESION PARDER         {$$ = new Tostring($3,@1.first_line, @1.first_column)} 
     
 
 ;

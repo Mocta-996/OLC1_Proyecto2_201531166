@@ -13,7 +13,7 @@ export class Truncate extends Instruccion {
     public execute(ambito: Ambito): any {
         let trun = this.value.execute(ambito);
         try {
-            if(trun!= null || trun != undefined){
+            if(trun!= null && trun != undefined){
                 if(trun.type == 0 ||trun.type == 3 ){
                      return { value: Math.trunc(trun.value),type:Type.ENTERO}
                 }
