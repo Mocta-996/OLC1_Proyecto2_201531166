@@ -3,6 +3,7 @@ import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { Type } from "../Expresion/Retorno";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class DeclararLista extends Instruccion {
 
@@ -31,7 +32,9 @@ export class DeclararLista extends Instruccion {
                     ambito.setVal(actual,this.value,this.tipo1, this.line, this.column,null,Type.LISTA);
                 }
                 else {
-                    throw new Error_(this.line, this.column, 'Semantico', 'No error en asignacion de tipos: declarado '+this.tipo1 +' ingresado '+this.tipo2)
+                    let er = new Error_(this.line, this.column, 'Semantico', 'No error en asignacion de tipos: declarado '+this.tipo1 +' ingresado '+this.tipo2)
+                    ListaError.push(er);
+                    throw er;
                 }
             } else{
                 ambito.setVal(actual,this.value,this.tipo1, this.line, this.column,null,Type.LISTA);

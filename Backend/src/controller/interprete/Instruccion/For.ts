@@ -4,6 +4,7 @@ import { Expresion } from "../Expresion/Expresion";
 import { Type } from "../Expresion/Retorno";
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class For extends Instruccion {
     //private condicion: { execute: (arg0: Ambito) => any; }
@@ -25,7 +26,9 @@ export class For extends Instruccion {
         const valorcondicion = this.condicion.execute(ambito);
         let contador =0;
         if(valorcondicion.type != Type.BOOLEANO){
-            throw new Error_(this.line, this.column, 'Semantico', "La condicion a evaluar no es de tipo boolean")
+            let er =new Error_(this.line, this.column, 'Semantico', "La condicion a evaluar no es de tipo boolean");
+            ListaError.push(er);
+                throw er;
         }
         while (true) {
             // comprobacion de tipos

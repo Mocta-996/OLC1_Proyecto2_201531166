@@ -4,6 +4,7 @@ import { Expresion } from "./Expresion";
 import { Retorno, Type } from "./Retorno"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
+import { ListaError } from '../Instruccion/ListaError';
 
 export class AccesoLista extends Expresion {
 
@@ -27,11 +28,16 @@ export class AccesoLista extends Expresion {
                 }
             }
             else{
-                throw new Error_(this.line, this.column, 'Semantico', 'Indice fuera de limite '+pos.value +'en ' + this.id);
+                let er = new Error_(this.line, this.column, 'Semantico', 'no se encontro el elemento en el indice  '+pos.value +' en ' + this.id);
+                ListaError.push(er);
+                throw er;
             }
         }
         else{
-            throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id);
+            let er = new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id);
+            ListaError.push(er);
+            throw er;
+            
         }
         
 

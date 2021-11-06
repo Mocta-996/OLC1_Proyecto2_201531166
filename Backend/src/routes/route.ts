@@ -8,4 +8,6 @@ router.get('/',controller.helloWorld);
 
 router.post('/interpretar',controller.interpretar);
 
+router.post('/ReporteErrores',controller.ReporteErr);
+
 export default router;

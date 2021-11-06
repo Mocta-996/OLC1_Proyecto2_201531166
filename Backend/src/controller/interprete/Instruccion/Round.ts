@@ -3,6 +3,7 @@ import { Expresion } from '../Expresion/Expresion';
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
 import { Type } from '../Expresion/Retorno';
+import { ListaError } from '../Instruccion/ListaError';
 export class Round extends Instruccion {
     private value: Expresion;
 
@@ -18,15 +19,19 @@ export class Round extends Instruccion {
                      return { value: Math.round(round.value),type:Type.DOUBLE}
                 }
                 else{
-                throw new Error_(this.line, this.column, 'Semantico', 'error en redondeo, no es posible para la variable  '+ round.value +' '+ round.type );
+                let er = new Error_(this.line, this.column, 'Semantico', 'error en redondeo, no es posible para la variable  '+ round.value +' '+ round.type );
+                ListaError.push(er);
+                throw er;
                 }
            
             }
             else {
-               // throw new Error_(this.line, this.column, 'Semantico', 'error roundcate, no es posible para la variable  '+ round.value +' '+ round.type );
+               // let er = new Error_(this.line, this.column, 'Semantico', 'error roundcate, no es posible para la variable  '+ round.value +' '+ round.type );
             }
         } catch (error) {
-                throw new Error_(this.line, this.column, 'Semantico', 'Error con la funcion Round  '+ round.value +' '+ round.type );
+                let er = new Error_(this.line, this.column, 'Semantico', 'Error con la funcion Round  '+ round.value +' '+ round.type );
+                ListaError.push(er);
+                throw er;
         }
 
      

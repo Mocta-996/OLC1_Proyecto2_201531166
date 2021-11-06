@@ -3,6 +3,7 @@ import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { type } from "os";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class ModificarLista extends Instruccion {
 
@@ -29,14 +30,25 @@ export class ModificarLista extends Instruccion {
                 if(nuevoValor.type == variableOriginal.type){
                     variableOriginal.valor[ind.value] = this.value;
                 }else {
-                    throw new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                    let er = new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                    ListaError.push(er);
+                    throw er;
                 }
             }
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: indice fuera de rango vector ' + this.id +' tamaño: ' +variableOriginal.valor.length +' indice: ' + ind.value);
+                if(nuevoValor.type == variableOriginal.type){
+                    variableOriginal.valor.splice(ind.value ,0,this.value);
+                }else {
+                    let er = new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                    ListaError.push(er);
+                    throw er;
+                }
+               // let er = new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: indice fuera de rango vector ' + this.id +' tamaño: ' +variableOriginal.valor.length +' indice: ' + ind.value);
             } 
         }else {
-            throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id)
+            let er = new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id);
+            ListaError.push(er);
+            throw er;
         }
     }
 }

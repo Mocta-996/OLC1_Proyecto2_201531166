@@ -3,6 +3,7 @@ import { Expresion } from "../Expresion/Expresion";
 import { Type } from "../Expresion/Retorno";
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class While extends Instruccion {
     constructor(private condicion: Expresion, private cuerpo: Instruccion, line: number, column: number) {
@@ -12,7 +13,10 @@ export class While extends Instruccion {
     public execute(ambito: Ambito) {
         let value = this.condicion.execute(ambito)
 
-        if (value.type != Type.BOOLEANO) throw new Error_(this.line, this.column, 'Semantico', "La condicion a evaluar no es de tipo boolean")
+        if (value.type != Type.BOOLEANO){ let er = new Error_(this.line, this.column, 'Semantico', "La condicion a evaluar no es de tipo boolean");
+                ListaError.push(er);
+                throw er;
+        }
         let limit =0;
         while (value.value) {
             const retorno = this.cuerpo.execute(ambito)
@@ -38,7 +42,9 @@ export class While extends Instruccion {
             }
         }
         if(limit == 10000){
-            throw new Error_(this.line, this.column, 'Semantico', "limite de iteraciones While")
+            let er = new Error_(this.line, this.column, 'Semantico', "limite de iteraciones While");
+            ListaError.push(er);
+            throw er;
         }
 
     }

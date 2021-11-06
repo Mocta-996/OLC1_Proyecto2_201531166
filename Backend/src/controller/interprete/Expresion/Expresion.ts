@@ -1,4 +1,5 @@
 import { Ambito } from "../Mas/Ambito";
+import { ListaError } from '../Instruccion/ListaError';
 import { tipos_suma,tipos_resta,tipos_multiplicacion,tipos_division,tipos_potencia,tipos_modulo, Type, Retorno } from "./Retorno"
 
 export abstract class Expresion {

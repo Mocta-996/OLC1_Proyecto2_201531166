@@ -3,6 +3,7 @@ import { Expresion } from "../Expresion/Expresion";
 import { Type } from "../Expresion/Retorno";
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class If extends Instruccion {
     //private condicion: { execute: (arg0: Ambito) => any; }
@@ -15,7 +16,9 @@ export class If extends Instruccion {
 
         if (value.type != Type.BOOLEANO) 
         {      // true - false
-            throw new Error_(this.line, this.column, 'Semantico', 'La condicion a evaluar en el if no es de tipo boolean');
+            let er = new Error_(this.line, this.column, 'Semantico', 'La condicion a evaluar en el if no es de tipo boolean');
+            ListaError.push(er);
+                throw er;
         }
         if (value.value) {
             return this.cuerpo.execute(ambito)

@@ -3,7 +3,7 @@ import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { type } from "os";
-
+import { ListaError } from '../Instruccion/ListaError';
 export class Asignar extends Instruccion {
 
     private id: string;
@@ -34,10 +34,14 @@ export class Asignar extends Instruccion {
                     variableOriginal.valor=nuevoValor.value;
             }
             else{
-                throw new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                let er= new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                ListaError.push(er);
+                throw er;
             }
         }else {
-            throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id)
+            let er = new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id)
+            ListaError.push(er);
+                throw er;
         }
     }
 }

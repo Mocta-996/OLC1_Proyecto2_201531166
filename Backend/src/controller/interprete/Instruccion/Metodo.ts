@@ -1,7 +1,7 @@
 import { Ambito } from "../Mas/Ambito";
 import { Type } from "../Expresion/Retorno";
 import { Instruccion } from "./Instruccion";
-
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Metodo extends Instruccion {
 

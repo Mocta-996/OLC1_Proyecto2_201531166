@@ -1,5 +1,6 @@
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Default extends Instruccion {
     constructor(line:number, column:number) {

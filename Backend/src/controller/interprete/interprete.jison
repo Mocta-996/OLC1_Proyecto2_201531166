@@ -48,6 +48,9 @@
 "round"             return 'ROUND';
 "typeof"            return 'TYPEOF';
 "tostring"          return 'TOSTRING';
+"tochararray"       return 'TOCHARARRAY';
+"start"             return 'START';
+"with"              return 'WITH';
 // aritmeticos
 "+"                 return 'MAS';
 "-"                 return 'MENOS';
@@ -100,7 +103,9 @@
 <<EOF>>                 return 'EOF';
 
 .                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); 
-                        new Error_(yylloc.first_line, yylloc.first_column, 'Lexico', 'Error Léxico:'  + yytext);}
+                        let err =new Error_(yylloc.first_line, yylloc.first_column, 'Lexico', "Error Léxico:  "+ yytext +"");
+                        ListaError.push(err);
+                        }
 /lex
 
 %{
@@ -134,6 +139,8 @@
     const {Round} = require('./Instruccion/Round');
     const {Typeof} = require('./Instruccion/Typeof');
     const {Tostring} = require('./Instruccion/Tostring');
+    const {DeclararListaChar} = require('./Instruccion/DeclararListaChar');
+    const {AsignarListaChar} = require('./Instruccion/AsignarListaChar');
 
     const {If} = require('./Instruccion/If');
     const {Statement} = require('./Instruccion/Statement');
@@ -145,6 +152,8 @@
 
     const {Funcion} = require('./Instruccion/Funcion');
     const {LlamadaFuncion} = require('./Instruccion/LlamadaFuncion');
+    const {StartWith} = require('./Instruccion/StartWith');
+    const { ListaError } = require ('./Instruccion/ListaError');
 
 %}
 %}
@@ -187,8 +196,11 @@ INSTRUCCION
     | RETORNAR PTCOMA        { $$ =$1; }
     | BREAK PTCOMA {$$=new Break(@1.first_line, @1.first_column)}
     | CONTINUE PTCOMA {$$=new Continue(@1.first_line, @1.first_column)}
+    | START WITH LLAMADAFUNCION {$$=new StartWith($3,@1.first_line, @1.first_column)}
 	| error PTCOMA{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-     new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico:'  + yytext);}
+     let err = new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico: '  + yytext);
+      ListaError.push(err);
+     }
 ;
 
 // ====================================================  GRAMATICA IMPRIMIR =================================
@@ -214,6 +226,9 @@ DECLARACION
     | TIPOS DECLARAVARIOS  CORIZR CORDER IGUAL LLAVEIZQ  LISTAVALORES LLAVEDER PTCOMA { {$$ = new DeclararVector($1,$2,$7,@1.first_line, @1.first_column,null,null)} } // vector con datos iniciales
     //constructor(tipo1:number,id: string[],tipo2:number, line: number, column: number,)
     | DYNAMICLIST MENORQUE TIPOS MAYORQUE DECLARAVARIOS  IGUAL NEW DYNAMICLIST MENORQUE TIPOS MAYORQUE PTCOMA { {$$ = new DeclararLista($3,$5,$10,[],@1.first_line, @1.first_column)} }
+    //constructor(tipo1:number,id: string[],value:Expresion, line: number, column: number,)
+    | DYNAMICLIST MENORQUE TIPOS MAYORQUE DECLARAVARIOS  IGUAL TOCHARARRAY PARIZQ EXPRESION PARDER PTCOMA { {$$ = new DeclararListaChar($3,$5,$9,@1.first_line, @1.first_column)} }
+   
    
 ;
 DECLARAVARIOS
@@ -239,6 +254,9 @@ ASIGNACION
     | APPEND PARIZQ ID COMA EXPRESION PARDER PTCOMA  { {$$ = new AsignarLista($3,$5,@1.first_line, @1.first_column)} }
      //constructor(id: string,indice:Expresion, value: Expresion, line: number, column: number)
     | SETVALUE PARIZQ ID COMA EXPRESION COMA EXPRESION PARDER PTCOMA  { {$$ = new ModificarLista($3,$5,$7,@1.first_line, @1.first_column)} }
+    | ID CORIZR CORIZR  EXPRESION CORDER CORDER IGUAL  EXPRESION PTCOMA  { {$$ = new ModificarLista($1,$4,$8,@1.first_line, @1.first_column)} }
+    // constructor(id: string, value: Expresion, line: number, column: number)
+    | ID IGUAL TOCHARARRAY PARIZQ  EXPRESION PARDER PTCOMA  { {$$ = new AsignarListaChar($1,$5,@1.first_line, @1.first_column)} }
 ;
 
 ASIGNACION2
@@ -288,13 +306,20 @@ SENTENCIAELSE
 STATEMENT
     : LLAVEIZQ INSTRUCCIONES LLAVEDER         { $$ = new Statement($2, @1.first_line, @1.first_column)}
     | LLAVEIZQ LLAVEDER                       {$$ = new Statement([], @1.first_line, @1.first_column)}
+    | error LLAVEDER { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+     let err = new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico: '  + yytext);
+      ListaError.push(err);
+     }
 ;
 
 // ========================================= SENTENCIA SWITCH CASE  ==============================
 //constructor(private condicion:Expresion, private cuerpo: Instruccion, private elsE: Instruccion, line: number, column: number) {
 SENTENCIASWITCH
     : SWITCH PARIZQ EXPRESION PARDER LLAVEIZQ LISTACASOS  LLAVEDER  {$$ = new SwitchCase($3,$6,@1.first_line, @1.first_column)}
-    //| SWITCH error LLAVEDER                                                    {console.log("Se recupero en ",yytext," (", this._$.last_line,", ", this._$.last_column,")");}
+    | error LLAVEDER{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+     let err = new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico: '  + yytext);
+      ListaError.push(err);
+     }
 ;
 
 LISTACASOS
@@ -335,10 +360,10 @@ SENTENCIADOWHILE
 // ========================================= FUNCIONES ======================================================
 
 SENTENCIAFUNCION 
-    : TIPOS ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,'funcion', @1.first_line, @1.first_column,$1);}
-    | TIPOS ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],'funcion', @1.first_line, @1.first_column,$1);}
-    | VOID ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,'void', @1.first_line, @1.first_column,null);}
-    | VOID ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],'void', @1.first_line, @1.first_column,null);}
+    : TIPOS ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,7, @1.first_line, @1.first_column,$1);}
+    | TIPOS ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],7, @1.first_line, @1.first_column,$1);}
+    | VOID ID PARIZQ PARAMETROS PARDER STATEMENT {$$ = new Funcion( $2, $6,$4,8, @1.first_line, @1.first_column,null);}
+    | VOID ID PARIZQ  PARDER STATEMENT {$$ = new Funcion( $2, $5,[],8, @1.first_line, @1.first_column,null);}
 ;
 
 PARAMETROS

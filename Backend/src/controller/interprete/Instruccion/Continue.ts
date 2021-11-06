@@ -1,6 +1,6 @@
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
-
+import { ListaError } from '../Instruccion/ListaError';
 export class Continue extends Instruccion {
     constructor(line:number, column:number) {
         super(line, column)

@@ -3,6 +3,7 @@ import { Expresion } from '../Expresion/Expresion';
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
 import { Type } from '../Expresion/Retorno';
+import { ListaError } from '../Instruccion/ListaError';
 export class Truncate extends Instruccion {
     private value: Expresion;
 
@@ -18,15 +19,19 @@ export class Truncate extends Instruccion {
                      return { value: Math.trunc(trun.value),type:Type.ENTERO}
                 }
                 else{
-                throw new Error_(this.line, this.column, 'Semantico', 'error truncate, no es posible para la variable  '+ trun.value +' '+ trun.type );
+                let er = new Error_(this.line, this.column, 'Semantico', 'error truncate, no es posible para la variable  '+ trun.value +' '+ trun.type );
+                ListaError.push(er);
+                throw er;
                 }
            
             }
             else {
-               // throw new Error_(this.line, this.column, 'Semantico', 'error truncate, no es posible para la variable  '+ trun.value +' '+ trun.type );
+               // let er = new Error_(this.line, this.column, 'Semantico', 'error truncate, no es posible para la variable  '+ trun.value +' '+ trun.type );
             }
         } catch (error) {
-                throw new Error_(this.line, this.column, 'Semantico', 'Error con la funcion Truncate  '+ trun.value +' '+ trun.type );
+                let er = new Error_(this.line, this.column, 'Semantico', 'Error con la funcion Truncate  '+ trun.value +' '+ trun.type );
+                ListaError.push(er);
+                throw er;
         }
 
      

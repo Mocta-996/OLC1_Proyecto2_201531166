@@ -1,6 +1,7 @@
 import { Expresion } from "../Expresion/Expresion";
 import { Ambito } from "../Mas/Ambito";
 import { Instruccion } from "./Instruccion";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Caso  {
     public linea:number;

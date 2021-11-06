@@ -3,6 +3,7 @@ import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { Type } from "../Expresion/Retorno";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class DeclararVector extends Instruccion {
 
@@ -45,7 +46,9 @@ export class DeclararVector extends Instruccion {
                     else if(this.tipo1 == 4){}*/
                 }
                 else {
-                    throw new Error_(this.line, this.column, 'Semantico', 'No error en asignacion de tipos: declarado '+this.tipo1 +' ingresado '+this.tipo2)
+                    let er = new Error_(this.line, this.column, 'Semantico', 'No error en asignacion de tipos: declarado '+this.tipo1 +' ingresado '+this.tipo2)
+                    ListaError.push(er);
+                    throw er;
                 }
             } else{
 

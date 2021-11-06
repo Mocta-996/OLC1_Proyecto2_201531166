@@ -1,0 +1,1 @@
+export let lista_errores:Array<String> =[];

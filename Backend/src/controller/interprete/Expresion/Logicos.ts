@@ -2,6 +2,7 @@ import { Expresion } from "./Expresion";
 import { Retorno, Type } from "./Retorno";
 import { Error_ } from '../Error/Error';
 import { Ambito } from "../Mas/Ambito";
+import { ListaError } from '../Instruccion/ListaError';
 export class Logicos extends Expresion {
 
     constructor(private left: Expresion, private right: Expresion, private tipo: TipoLogico, line: number, column: number) {
@@ -19,14 +20,18 @@ export class Logicos extends Expresion {
                 //if (rightValue.type === Type.BOOLEANO) {
                    
                 //}
-                throw new Error_(this.line, this.column, 'Semantico', 'No se pueden operar estos tipos con AND '+ leftValue.type + ' y ' + rightValue.type)
+                let er= new Error_(this.line, this.column, 'Semantico', 'No se pueden operar estos tipos con AND '+ leftValue.type + ' y ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             //}
             //throw new Error_(this.line, this.column, 'Semantico', 'No se pueden operar estos tipos con AND '+ leftValue.type + ' y  ' + rightValue.type)
         } else if (this.tipo == TipoLogico.OR) {
             // const rightValue = this.right.execute(ambito);
             return { value: (leftValue.value || rightValue.value), type: Type.BOOLEANO }
         }else {
-            throw new Error_(this.line, this.column, 'Semantico', 'Error en operacion Logica '+ leftValue.type + ' '+this.tipo+' ' + rightValue.type);
+            let er = new Error_(this.line, this.column, 'Semantico', 'Error en operacion Logica '+ leftValue.type + ' '+this.tipo+' ' + rightValue.type);
+            ListaError.push(er);
+            throw er;
         }
     }
 }

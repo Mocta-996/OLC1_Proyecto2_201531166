@@ -3,9 +3,11 @@ import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { type } from "os";
+import {Primitivo,TipoPrimitivo}  from "../Expresion/Primitivo";
+import { Type } from "../Expresion/Retorno";
 import { ListaError } from '../Instruccion/ListaError';
 
-export class AsignarLista extends Instruccion {
+export class AsignarListaChar extends Instruccion {
 
     private id: string;
     private value: Expresion;
@@ -18,12 +20,17 @@ export class AsignarLista extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        let variableOriginal = ambito.getVal(this.id)
-        let nuevoValor = this.value?.execute(ambito)
+        const variableOriginal = ambito.getVal(this.id)
+        const nuevoValor = this.value?.execute(ambito)
         if (variableOriginal != null){
             // validar los tipos
-            if(nuevoValor.type == variableOriginal.type){
-                variableOriginal.valor.push( this.value);
+            if( variableOriginal.type == 4 && nuevoValor.type == 1 && variableOriginal.edd == 6){
+                const varaux = nuevoValor.value.split('');
+                for(let i=0;i<varaux.length;i++){
+                    var aux = new Primitivo( varaux[i],TipoPrimitivo.CARACTER,this.line, this.column);
+                     variableOriginal.valor.push( aux);
+                }
+               
             }else {
                 let er = new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + this.id +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
                 ListaError.push(er);

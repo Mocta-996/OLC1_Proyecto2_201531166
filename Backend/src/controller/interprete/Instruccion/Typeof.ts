@@ -3,6 +3,7 @@ import { Expresion } from '../Expresion/Expresion';
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
 import { Type } from '../Expresion/Retorno';
+import { ListaError } from '../Instruccion/ListaError';
 export class Typeof extends Instruccion {
     private value: Expresion;
 
@@ -31,16 +32,19 @@ export class Typeof extends Instruccion {
                      return { value: "caracter",type:Type.CADENA}
                 }
                 else{
-                throw new Error_(this.line, this.column, 'Semantico', 'error en recuperacion de tipo, no es posible para la variable  '+ tipo.value +' '+ tipo.type );
+                let er = new Error_(this.line, this.column, 'Semantico', 'error en recuperacion de tipo, no es posible para la variable  '+ tipo.value +' '+ tipo.type );
+                ListaError.push(er);
+                throw er;
                 }
            
             }
             else {
-               // throw new Error_(this.line, this.column, 'Semantico', 'error typeofcate, no es posible para la variable  '+ typeof.value +' '+ typeof.type );
+               // let er = new Error_(this.line, this.column, 'Semantico', 'error typeofcate, no es posible para la variable  '+ typeof.value +' '+ typeof.type );
             }
         } catch (error) {
-                throw new Error_(this.line, this.column, 'Semantico', 'error en funcion Typeof:  no es posible para la variable  '+ tipo.value +' '+ tipo.type );
-               
+                let er = new Error_(this.line, this.column, 'Semantico', 'error en funcion Typeof:  no es posible para la variable  '+ tipo.value +' '+ tipo.type );
+               ListaError.push(er);
+                throw er;    
        }
 
      

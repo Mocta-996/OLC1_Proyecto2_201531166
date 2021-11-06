@@ -4,6 +4,7 @@ import { Expresion } from "./Expresion";
 import { Retorno, Type } from "./Retorno"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Acceso extends Expresion {
 
@@ -13,8 +14,15 @@ export class Acceso extends Expresion {
 
     public execute(ambito: Ambito): Retorno {
         let value = ambito.getVal(this.id)
-        if (value != null) return { value: value.valor, type: value.type, tamanio:value.tamanio,edd:value.edd}
-        throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id)
+        if (value != null) 
+        {return { value: value.valor, type: value.type, tamanio:value.tamanio,edd:value.edd}
+        }
+        else{
+            let er = new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id);
+            ListaError.push(er);
+            throw er;
+        }
+       
 
     }
 }

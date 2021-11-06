@@ -2,6 +2,7 @@ import { Expresion } from "./Expresion";
 import { Retorno, Type } from "./Retorno";
 import { Error_ } from '../Error/Error';
 import { Ambito } from "../Mas/Ambito";
+import { ListaError } from '../Instruccion/ListaError';
 export class Relacional extends Expresion {
 
     constructor(private left: Expresion, private right: Expresion, private tipo: TipoRelacional, line: number, column: number) {
@@ -30,7 +31,9 @@ export class Relacional extends Expresion {
             const result = leftValue.value <= rightValue.value
             return { value: result, type: Type.BOOLEANO }
         } else {
-            throw new Error_(this.line, this.column, 'Semantico', 'Error en operacion Relacional'+ leftValue.type + ' _ ' + rightValue.type);
+            let er = new Error_(this.line, this.column, 'Semantico', 'Error en operacion Relacional'+ leftValue.type + ' _ ' + rightValue.type);
+            ListaError.push(er);
+         throw er;
         }
 
     }

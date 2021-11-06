@@ -4,6 +4,7 @@ import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
 import { Primitivo } from "./Primitivo";
 import { Acceso } from "./Acceso";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Inc_dec extends Instruccion {
 
@@ -42,7 +43,9 @@ export class Inc_dec extends Instruccion {
                     return { value: nuevoValor.value +1 , type: nuevoValor.type}
                 }
                 else{
-                    throw new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + identificador +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                    let er= new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + identificador +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                    ListaError.push(er);
+                    throw er;
                 }
            } else {
                 if(variableOriginal.type == 0 && nuevoValor.type == 3){
@@ -60,12 +63,16 @@ export class Inc_dec extends Instruccion {
                         return { value: nuevoValor.value -1 , type: nuevoValor.type}
                 }
             else{
-                throw new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + identificador +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                let er= new Error_(this.line, this.column, 'Semantico', 'Error en asignacion: tipos no coinciden ' + identificador +' tipo '+ variableOriginal.type + 'tipoN '+nuevoValor.type);
+                ListaError.push(er);
+                throw er;
             }
            }
             
         }else {
-            throw new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + identificador);
+            let er= new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + identificador);
+            ListaError.push(er);
+                throw er;
         }
 
         }
@@ -85,7 +92,9 @@ export class Inc_dec extends Instruccion {
                 return { value: inc , type:val.type}
             }
             else{
-                throw new Error_(this.line, this.column, 'Semantico', 'error en incremento  '+val.type +' a '+ val.type); 
+                let er =  new Error_(this.line, this.column, 'Semantico', 'error en incremento  '+val.type +' a '+ val.type); 
+                ListaError.push(er);
+                throw er;
             }
         }
         else {
@@ -99,7 +108,9 @@ export class Inc_dec extends Instruccion {
                 return { value: inc , type:val.type}
             }
             else{
-                throw new Error_(this.line, this.column, 'Semantico', 'error en incremento  '+val.type +' a '+ val.type); 
+                let er= new Error_(this.line, this.column, 'Semantico', 'error en incremento  '+val.type +' a '+ val.type); 
+                ListaError.push(er);
+                throw er;
             }
         }
         }

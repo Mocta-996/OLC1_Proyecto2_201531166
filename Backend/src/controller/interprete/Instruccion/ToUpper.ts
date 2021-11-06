@@ -2,6 +2,7 @@ import { Instruccion } from './Instruccion';
 import { Expresion } from '../Expresion/Expresion';
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from '../Error/Error';
+import { ListaError } from '../Instruccion/ListaError';
 export class ToUpper extends Instruccion {
     private value: Expresion;
 
@@ -17,7 +18,9 @@ export class ToUpper extends Instruccion {
             return { value: stringretornar,type:tostr.type}
         }else 
         {
-            throw new Error_(this.line, this.column, 'Semantico', 'Tolowercase: cadena no valida  ' + tostr.value );
+            let er = new Error_(this.line, this.column, 'Semantico', 'Tolowercase: cadena no valida  ' + tostr.value );
+            ListaError.push(er);
+            throw er;
      
         }
      

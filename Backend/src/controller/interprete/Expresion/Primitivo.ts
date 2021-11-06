@@ -1,6 +1,7 @@
 import { Ambito } from "../Mas/Ambito";
 import { Expresion } from "./Expresion";
 import { Retorno, Type } from './Retorno';
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Primitivo extends Expresion {
 
@@ -15,7 +16,7 @@ export class Primitivo extends Expresion {
         } else if (this.tipo == 3) {
             return { value:parseFloat(this.value), type: Type.DOUBLE }
         }else if(this.tipo == 4){
-            return { value: this.value.charCodeAt(0), type: Type.CARACTER }
+            return { value: this.value, type: Type.CARACTER }
         } else {
             if (this.value.toString().toLowerCase() == "true") {
                 return { value: true, type: Type.BOOLEANO }

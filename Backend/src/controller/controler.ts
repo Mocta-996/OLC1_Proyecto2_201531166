@@ -3,12 +3,9 @@ import { Ambito } from './interprete/Mas/Ambito';
 import {ListaWriteline} from './interprete/Instruccion/ListaWriteline';
 import { ListaError } from './interprete/Instruccion/ListaError';
 import { Funcion } from './interprete/Instruccion/Funcion';
-//import Excepcion from './analizador/Excepciones/Excepcion';
-//import Arbol from './analizador/tablaSimbolos/Arbol';
-//import tablaSimbolos from './analizador/tablaSimbolos/tablaSimbolos';
-
-
-//var Errors:Array<Excepcion> = new Array<Excepcion>();
+import { StartWith } from './interprete/Instruccion/StartWith';
+import { Writeline } from './interprete/Instruccion/Writeline';
+import {lista_errores} from './interprete/Error/lista_errores';
 
 class rjpController{
 
@@ -42,22 +39,24 @@ class rjpController{
             }
             try{
                 for (const inst of ast){
-                    if(!(inst instanceof Funcion)){
+                    if(!(inst instanceof Funcion) && !(inst instanceof StartWith) && !(inst instanceof Writeline) ){
+                        const retornar1 = inst.execute(ambito);
+                    }
+                }
+                for (const inst of ast){
+                    if(inst instanceof StartWith){
                         const retornar = inst.execute(ambito);
                     }
-                   
-
                 }
             }catch(error){
                 console.log(error);
             }
             let resultado =  ListaWriteline;
-            let errores = ListaError;
+            let errores = lista_errores;
             let mensaje= resultado.join("\n") +"\n"+errores.join("\n");
-           
             res.send({consola:mensaje});
             ListaWriteline.splice(0,ListaWriteline.length);
-            ListaError.splice(0,ListaError.length);
+            lista_errores.splice(0,lista_errores.length);
         }
         catch(err){
             console.log(err);
@@ -69,6 +68,24 @@ class rjpController{
     }
 
 
+    public ReporteErr (req:Request,res:Response){
+        let error = ListaError;
+        let lexico =[]
+        let sintactico =[]
+        let semantico =[]
+
+        for(let i=0 ; i<error.length ;i++){
+            if(error[i].tipo == "Lexico"){
+                lexico.push(error[i]);
+            }else if(error[i].tipo == "Sintactico"){
+                sintactico.push(error[i]);
+            }else {
+               semantico.push(error[i]);
+            }
+        }
+        res.send({lexico:error });
+        ListaError.splice(0,ListaError.length);
+    }
 
     /*public interpretar (req:Request,res:Response){
         var parser = require('./analizador/jpr');

@@ -2,7 +2,7 @@ import { Expresion } from "../Expresion/Expresion";
 import { Instruccion } from "./Instruccion"
 import { Ambito } from '../Mas/Ambito';
 import { Error_ } from "../Error/Error";
-
+import { ListaError } from '../Instruccion/ListaError';
 export class Ternario extends Instruccion {
 
     private condicion:Expresion;
@@ -29,7 +29,9 @@ export class Ternario extends Instruccion {
             return { value: ret2.value,type:ret2.type} 
         }
         }catch{
-            throw new Error_(this.line, this.column, 'Semantico', 'Operacion Ternaria no valida: ' + this.condicion +'?  '+this.retorno1 +' : '+this.retorno2);
+            let er =new Error_(this.line, this.column, 'Semantico', 'Operacion Ternaria no valida: ' + this.condicion +'?  '+this.retorno1 +' : '+this.retorno2);
+            ListaError.push(er);
+                throw er;
         }
         
        

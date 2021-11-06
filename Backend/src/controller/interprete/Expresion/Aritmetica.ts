@@ -2,6 +2,7 @@ import { Expresion } from "./Expresion";
 import { Retorno, Type } from "./Retorno"
 import { Error_ } from "../Error/Error";
 import { Ambito } from "../Mas/Ambito";
+import { ListaError } from '../Instruccion/ListaError';
 
 export class Aritmetica extends Expresion {
 
@@ -95,7 +96,9 @@ export class Aritmetica extends Expresion {
             } else if(leftValue.type == Type.CADENA &&  rightValue.type == Type.CADENA){
                 return { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.CADENA }; 
             }else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar Suma: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er= new Error_(this.line, this.column, 'Semantico', 'No se puede operar Suma: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             }
 
         } else if (this.tipo == TipoAritmetica.RESTA) {
@@ -151,7 +154,9 @@ export class Aritmetica extends Expresion {
                 return { value: ( parseFloat(ascii)-rightValue.value ), type: Type.DOUBLE }; 
             }
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar resta: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er =  new Error_(this.line, this.column, 'Semantico', 'No se puede operar resta: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;   
             } 
         }
         // MULTIPLICACION 
@@ -186,7 +191,9 @@ export class Aritmetica extends Expresion {
                 return { value: ( parseFloat(ascii)*rightValue.value ), type: Type.DOUBLE }; 
             }
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar Multiplicacion: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er=  new Error_(this.line, this.column, 'Semantico', 'No se puede operar Multiplicacion: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             } 
         }
         // DIVISION 
@@ -221,7 +228,9 @@ export class Aritmetica extends Expresion {
                 return { value: ( parseFloat(ascii) / rightValue.value ), type: Type.DOUBLE }; 
             }
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar Division: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er= new Error_(this.line, this.column, 'Semantico', 'No se puede operar Division: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             } 
         // POTENCIA 
         }else if (this.tipo == TipoAritmetica.POTENCIA) {
@@ -240,7 +249,9 @@ export class Aritmetica extends Expresion {
 
             } 
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar Potencia: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er =  new Error_(this.line, this.column, 'Semantico', 'No se puede operar Potencia: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             } 
         }
         // MODULO 
@@ -260,10 +271,14 @@ export class Aritmetica extends Expresion {
 
             } 
             else {
-                throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar Division: ' + leftValue.type + ' _ ' + rightValue.type);
+                let er=  new Error_(this.line, this.column, 'Semantico', 'No se puede operar Division: ' + leftValue.type + ' _ ' + rightValue.type);
+                ListaError.push(er);
+                throw er;
             } 
         }else {
-            throw new Error_(this.line, this.column, 'Semantico', 'No se puede realizar la operacion: ' + leftValue.type + ' _ ' + rightValue.type); 
+            let er = new Error_(this.line, this.column, 'Semantico', 'No se puede realizar la operacion: ' + leftValue.type + ' _ ' + rightValue.type); 
+            ListaError.push(er);
+            throw er;
         }
     }
 }
