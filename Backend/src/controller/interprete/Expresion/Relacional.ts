@@ -37,6 +37,37 @@ export class Relacional extends Expresion {
         }
 
     }
+
+
+    /*if (this.tipo == TipoRelacional.IGUALACION) {
+
+        } else if (this.tipo == TipoRelacional.DIFERENCIACION) {
+            
+        } else if (this.tipo == TipoRelacional.MAYORQUE) {
+            
+        } else if (this.tipo == TipoRelacional.MAYORIGUAL) {
+           
+        } else if (this.tipo == TipoRelacional.MENORQUE) {
+            
+        } else if (this.tipo == TipoRelacional.MENORIGUAL) {*/
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoaritmetica"+aleatorio.toString();
+        const exiz:{codigorama:string ,nombrenodo:string} =this.left.getCodigoAST();
+        const exder:{codigorama:string ,nombrenodo:string} =this.right.getCodigoAST();
+        const codigorama =` 
+        ${nombreNodoP}[label ="RELACIONAL"];
+        nodooperacion${nombreNodoP}[label="${this.tipo.toString()}"];
+        ${exiz.codigorama}
+        ${exder.codigorama}
+        ${nombreNodoP} ->${exiz.nombrenodo};
+        ${nombreNodoP} -> nodooperacion${nombreNodoP};
+        ${nombreNodoP} ->${exder.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+    }
+
 }
 
 export enum TipoRelacional {

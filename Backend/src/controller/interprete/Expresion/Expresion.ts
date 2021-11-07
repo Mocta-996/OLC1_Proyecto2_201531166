@@ -12,6 +12,8 @@ export abstract class Expresion {
 
     public abstract execute(ambito: Ambito): Retorno;
 
+    public abstract getCodigoAST(): { codigorama: string, nombrenodo: string };
+
   
     public tipoDominante(tipo1: Type, tipo2: Type,operacion:number): Type {
         if(operacion ==1){

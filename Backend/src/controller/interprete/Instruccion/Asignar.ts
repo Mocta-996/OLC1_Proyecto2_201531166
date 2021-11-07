@@ -44,6 +44,23 @@ export class Asignar extends Instruccion {
                 throw er;
         }
     }
+
+   
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoasignacion"+aleatorio.toString();
+        const val:{codigorama:string ,nombrenodo:string} =this.value.getCodigoAST();
+        const codigorama =` 
+        ${nombreNodoP}[label ="ASIGNAR"];
+        nodoIDS${nombreNodoP}[label="ID"];
+        nodoid${nombreNodoP}[label="${this.id}"];
+        ${val.codigorama}
+        ${nombreNodoP} ->nodoIDS${nombreNodoP} ->nodoid${nombreNodoP};
+        ${nombreNodoP}->${val.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+        
+    }
 }
 
 export enum tiposvalidos{

@@ -29,6 +29,11 @@ export class If extends Instruccion {
 
     }
 
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
+
 }
 
 //1. ejecutar la condicion

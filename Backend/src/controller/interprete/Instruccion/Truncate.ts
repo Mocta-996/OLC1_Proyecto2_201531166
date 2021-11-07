@@ -36,4 +36,9 @@ export class Truncate extends Instruccion {
 
      
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

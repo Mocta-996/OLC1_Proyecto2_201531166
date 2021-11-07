@@ -18,4 +18,9 @@ export class Funcion extends Instruccion {
         }
        
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

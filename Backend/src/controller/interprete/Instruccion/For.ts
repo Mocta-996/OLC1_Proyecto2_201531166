@@ -62,4 +62,9 @@ export class For extends Instruccion {
 
     }
 
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
+
 }

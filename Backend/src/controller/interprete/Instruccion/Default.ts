@@ -11,4 +11,9 @@ export class Default extends Instruccion {
         return { type: 'Default', line: this.line, column: this.column }
     }
 
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
+
 }

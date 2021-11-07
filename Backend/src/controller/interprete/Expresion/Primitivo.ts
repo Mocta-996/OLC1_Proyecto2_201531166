@@ -24,6 +24,33 @@ export class Primitivo extends Expresion {
             return { value: false, type: Type.BOOLEANO }
         }
     }
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        let tipo = "BOOLEANO";
+        if (this.tipo == 1){
+            tipo ="CADENA";
+        }else if (this.tipo == 0) {
+            tipo ="ENTERO";
+        } else if (this.tipo == 3) {
+            tipo ="DOULBE";
+        } else if (this.tipo == 4) {
+            tipo ="CARACTER";
+        }
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoprimitivo"+aleatorio.toString();
+        const codigorama =` 
+        ${nombreNodoP}[label ="PRIMITIVO"];
+        nodotipo${nombreNodoP}[label="${tipo}"];
+        nodovalor${nombreNodoP}[label="${this.value.toString()}"];
+        ${nombreNodoP} ->nodotipo${nombreNodoP};
+        nodotipo${nombreNodoP} ->nodovalor${nombreNodoP};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+    }
+
+
+
+
 }
 
 export enum TipoPrimitivo {

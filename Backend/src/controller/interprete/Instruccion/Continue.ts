@@ -10,4 +10,14 @@ export class Continue extends Instruccion {
         return { type: 'Continue', line: this.line, column: this.column }
     }
 
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+      
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodocontinue"+aleatorio.toString();
+        const codigorama =` 
+        ${nombreNodoP}[label ="CONTINUE"];
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+    }
+
 }

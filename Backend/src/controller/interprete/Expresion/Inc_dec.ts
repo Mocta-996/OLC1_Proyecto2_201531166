@@ -120,4 +120,36 @@ export class Inc_dec extends Instruccion {
        
         
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+         let acc = "++";
+         if(this.accion =1){
+             acc="--";
+         }
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoic"+aleatorio.toString();
+        const valor:{codigorama:string ,nombrenodo:string} =this.value.getCodigoAST();
+        if(this.id?.id != null){
+            const ids:{codigorama:string ,nombrenodo:string} =this.id.getCodigoAST();
+            const codigorama =` 
+            ${nombreNodoP}[label ="INCREMENTO"];
+            nodoicremento${nombreNodoP}[label="${acc}"];
+            ${ids.codigorama}
+            ${nombreNodoP} ->${ids.nombrenodo};
+            ${ids.nombrenodo} -> ${ids.nombrenodo};
+            `;
+            return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+        }else{
+            const ids:{codigorama:string ,nombrenodo:string} =this.value.getCodigoAST();
+            const codigorama =` 
+            ${nombreNodoP}[label ="INCREMENTO"];
+            nodoicremento${nombreNodoP}[label="${acc}"];
+            ${ids.codigorama}
+            ${nombreNodoP} ->${ids.nombrenodo};
+            ${ids.nombrenodo} -> ${ids.nombrenodo};
+            `;
+            return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+        }
+  
+    }
 }

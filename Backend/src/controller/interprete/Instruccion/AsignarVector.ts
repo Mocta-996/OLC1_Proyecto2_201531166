@@ -47,6 +47,26 @@ export class AsignarVector extends Instruccion {
                 throw er;
         }
     }
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoasignacionvector"+aleatorio.toString();
+        const val:{codigorama:string ,nombrenodo:string} =this.value.getCodigoAST();
+        const indice:{codigorama:string ,nombrenodo:string} =this.posicon.getCodigoAST();
+        const codigorama =` 
+        ${nombreNodoP}[label ="ASIGNAR VECTOR"];
+        nodoIDS${nombreNodoP}[label="IDLISTA"];
+        nodoid${nombreNodoP}[label="${this.id}"];
+        nodpos${nombreNodoP}[label="INDICE"];
+        ${val.codigorama}
+        ${indice.codigorama}
+        ${nombreNodoP} ->nodoIDS${nombreNodoP} ->nodoid${nombreNodoP};
+        ${nombreNodoP}->${val.nombrenodo};
+        nodoid${nombreNodoP} -> nodpos${nombreNodoP} ->  ${indice.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+        
+    }
 }
 
 export enum tiposvalidos{

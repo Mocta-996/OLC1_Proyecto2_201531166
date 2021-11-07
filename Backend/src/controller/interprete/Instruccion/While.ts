@@ -48,4 +48,9 @@ export class While extends Instruccion {
         }
 
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

@@ -12,4 +12,8 @@ export class Metodo extends Instruccion {
     public execute(ambito: Ambito) {
        // ambito.guardarFuncion(this.id, this);
     }
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

@@ -51,4 +51,9 @@ export class DeclararListaChar extends Instruccion {
             }
         }
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

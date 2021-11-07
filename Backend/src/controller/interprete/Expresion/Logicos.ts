@@ -34,6 +34,29 @@ export class Logicos extends Expresion {
             throw er;
         }
     }
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        let op="&&";
+        if(this.tipo == TipoLogico.NOT){
+            op="!";
+        }else if(this.tipo == TipoLogico.OR){
+             op="||";
+        }
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodologico"+aleatorio.toString();
+        const exiz:{codigorama:string ,nombrenodo:string} =this.left.getCodigoAST();
+        const exder:{codigorama:string ,nombrenodo:string} =this.right.getCodigoAST();
+        const codigorama =` 
+        ${nombreNodoP}[label ="LOGICO"];
+        nodooperacion${nombreNodoP}[label="${op}"];
+        ${exiz.codigorama}
+        ${exder.codigorama}
+        ${nombreNodoP} ->${exiz.nombrenodo};
+        ${nombreNodoP} -> nodooperacion${nombreNodoP};
+        ${nombreNodoP} ->${exder.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+    }
 }
 
 export enum TipoLogico{

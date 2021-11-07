@@ -14,4 +14,8 @@ export class StartWith extends Instruccion {
         this.funcioninicial.execute(ambito);
         //ambito.guardarFuncion(this.id, this);
     }
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

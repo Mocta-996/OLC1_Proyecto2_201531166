@@ -201,6 +201,7 @@ INSTRUCCION
      let err = new Error_(this._$.first_line, this._$.first_column, 'Sintactico', 'Error sintactico: '  + yytext);
       ListaError.push(err);
      }
+    
 ;
 
 // ====================================================  GRAMATICA IMPRIMIR =================================
@@ -428,6 +429,7 @@ EXPRESION
     | ROUND PARIZQ EXPRESION PARDER         {$$ = new Round($3,@1.first_line, @1.first_column)} 
     | TYPEOF PARIZQ EXPRESION PARDER         {$$ = new Typeof($3,@1.first_line, @1.first_column)} 
     | TOSTRING PARIZQ EXPRESION PARDER         {$$ = new Tostring($3,@1.first_line, @1.first_column)} 
+    
     
 
 ;

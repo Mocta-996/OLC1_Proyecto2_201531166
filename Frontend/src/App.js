@@ -8,13 +8,17 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
+// Graph from "./components/graph";
+
 
 const url = 'http://localhost:3001/';
 function App() {
   const [ret, setRet] = useState("");
+  const [erroresconsola, setErroersconsola] = useState([]);
   const [js, setJs] = useState("");
   const [srcDoc, setsrcDoc] = useState("");
   const [ errores, setErrores] = useState([]);
+   const [ tabla, setTabla] = useState([]);
   //{lexico:"",sintactico:"",semantico:""}
 
   useEffect(() => {
@@ -38,6 +42,8 @@ function App() {
     try {
       const response = await fetch('http://localhost:3001/interpretar',requestOptions);
       const json = await response.json();
+      //setRet(json.consola);
+      //setErroersconsola(json.error);
       //console.log(json);
       var texto = json.consola ;
       if(json.error !=null){
@@ -50,19 +56,27 @@ function App() {
     }
   };
 
-  // peticion para obtener los errores
+  // peticion para obtener tabla de simbolos
+  const fetchTabla = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/TablaSimbolos',requestOptions);
+      const json = await response.json();
+      
+      console.log(json);
+      setTabla(json.tabla)
+      
+      
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   const fetchErrores = async () => {
     try {
       const response = await fetch('http://localhost:3001/ReporteErrores',requestOptions);
       const json = await response.json();
       
       console.log(json);
-      /*serErrores({
-        ...errores,
-        lexico:json.lexico,
-        sintactico :json.sintactico,
-        semantico :json.semantico
-      })*/
       setErrores(json.lexico)
       
     } catch (error) {
@@ -70,7 +84,6 @@ function App() {
     }
   };
   
-
 
 
   return (
@@ -111,19 +124,29 @@ function App() {
               value={js}
               onChange={setJs}
             />
+           
           </Grid>
         </Grid>
 
         {/* SECCION DE CONSOLA */ }
-        <Grid container>
-          <Grid item xs={1} sm = {false} > </Grid>
-            <Grid item xs={10}>
-              <div style={{ backgroundColor: "hsl(225, 6%, 25%)", padding: 20 }}>
+                  
               
-                <textarea value={ret}  />
-              </div>
-            </Grid>
-        </Grid>
+            <div class="row">
+            <p className="para" style={{ marginTop: 15, marginLeft: 10 }}>
+                    Consola
+            </p>
+              <div class="col-md-1"></div>
+                  <div class="col-xs-10 col-sm-10 col-md-10">
+                    <div className="display-linebreak" class ="p-3 mb-2 bg-dark text-white"> 
+                      <div style={{ whiteSpace: "break-spaces" }}> {ret} </div>
+                   
+                  </div> 
+                </div>
+            </div>
+                  
+           
+      
+  
          {/*seccion de reportes*/ } 
 
         <Grid container>
@@ -132,7 +155,7 @@ function App() {
             <Stack direction="row" spacing={2}>
               <Button variant="outlined" onClick={()=>fetchErrores()} >Reporte Errores </Button>
               <Button variant="outlined">Arbol AST</Button>
-              <Button variant="outlined">Tabla de simbolos</Button>
+              <Button variant="outlined" onClick={()=>fetchTabla()}>Tabla de simbolos</Button>
             </Stack>
           </Grid>
         </Grid>
@@ -194,60 +217,39 @@ function App() {
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Tipo de Error</th>
-                <th scope="col">Descripcion </th>
+                <th scope="col">Identificador</th>
+                <th scope="col">Tipo  </th>
+                 <th scope="col">Tipo  </th>
+                <th scope="col">Entorno</th>
                 <th scope="col">Linea</th>
-                <th scope="col">Columna</th>
+                 <th scope="col">Columna</th>
               </tr>
             </thead>
             <tbody>
-            {errores.map(lexico => {
-                let j=0;
+             {tabla.map(tabla => {
                 return (
                 <tr>
                 <th scope="row">{}</th>
-                <td>{lexico.tipo}</td>
-                <td>{lexico.mensaje}</td>
-                <td>{lexico.linea}</td>
-                <td>{lexico.columna}</td>
+                <td>{tabla.id}</td>
+                <td>{tabla.tipo1}</td>
+                <td>{tabla.tipo2}</td>
+                <td>{tabla.ambito}</td>
+                <td>{tabla.linea}</td>
+                <td>{tabla.columna}</td>
                 </tr>
                 );
-                j++;
             })}
+          
             </tbody>
           </table> 
         </Box>
-        </div>
+        </div> 
 
-
-
-        
+        <div>
+        </div>     
       </div>
      
   );
 }
 
 export default App;
-/*
- <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-
-
-
- */

@@ -29,7 +29,7 @@ export class LlamadaFuncion extends Instruccion {
                 const value = this.expresiones[i].execute(ambito);
                 const auxval = func.parametros[i];
                 if(parseInt(auxval[0]) == value.type || (auxval[0]== 0 &&  value.type ==3) || (auxval[0]== 3 &&  value.type ==0 ) ){
-                    newEnv.setVal(auxval[1], value.value, value.type, this.line, this.column,null);
+                    newEnv.createVar(auxval[1], value.value, value.type, this.line, this.column,null);
                 }else{
                     let er = new Error_(this.line, this.column, 'Semantico', "tipo de parametros no coinciden");
                     ListaError.push(er);
@@ -63,6 +63,11 @@ export class LlamadaFuncion extends Instruccion {
                 throw er;
             }
         }
+    }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
     }
 }
 

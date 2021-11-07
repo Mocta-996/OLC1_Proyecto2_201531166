@@ -43,4 +43,9 @@ export class DoWhile extends Instruccion {
         }
 
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }

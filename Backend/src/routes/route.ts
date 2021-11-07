@@ -10,4 +10,7 @@ router.post('/interpretar',controller.interpretar);
 
 router.post('/ReporteErrores',controller.ReporteErr);
 
+router.post('/TablaSimbolos',controller.ReporteTabla);
+
+
 export default router;

@@ -14,4 +14,6 @@ export abstract class Instruccion {
     }
 
     public abstract execute(ambito: Ambito): any;
+    public abstract getCodigoAST(): { codigorama: string, nombrenodo: string };
+
 }

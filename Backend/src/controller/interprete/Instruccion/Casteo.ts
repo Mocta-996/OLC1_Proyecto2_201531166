@@ -7,7 +7,7 @@ import { ListaError } from '../Instruccion/ListaError';
 export class Casteo extends Instruccion {
 
 
-    private value: Expresion |null; // valor 
+    private value: Expresion; // valor 
     private cast:number;            // tipo de casteo
 
     constructor(cast:number, value: Expresion, line: number, column: number) {
@@ -164,5 +164,31 @@ export class Casteo extends Instruccion {
             }
        
         }*/
+    }
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        let tipo = "BOOLEANO";
+        if (this.cast == 1){
+            tipo ="CADENA";
+        }else if (this.cast == 0) {
+            tipo ="ENTERO";
+        } else if (this.cast== 3) {
+            tipo ="DOULBE";
+        } else if (this.cast == 4) {
+            tipo ="CARACTER";
+        }
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodocasteo"+aleatorio.toString();
+        const val:{codigorama:string ,nombrenodo:string}=this.value.getCodigoAST();
+        
+        
+        const codigorama =` 
+        ${nombreNodoP}[label ="CAST"];
+        nodotipo${nombreNodoP}[label="${tipo}"];
+        ${val.codigorama}
+        ${nombreNodoP} -> nodotipo${nombreNodoP} ->${val.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
+        
     }
 }

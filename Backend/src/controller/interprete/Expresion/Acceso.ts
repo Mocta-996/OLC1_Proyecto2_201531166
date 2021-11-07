@@ -7,7 +7,7 @@ import { Error_ } from '../Error/Error';
 import { ListaError } from '../Instruccion/ListaError';
 
 export class Acceso extends Expresion {
-
+    public valor:string;
     constructor(public id: string, line: number, column: number) {
         super(line, column);
     }
@@ -15,7 +15,9 @@ export class Acceso extends Expresion {
     public execute(ambito: Ambito): Retorno {
         let value = ambito.getVal(this.id)
         if (value != null) 
-        {return { value: value.valor, type: value.type, tamanio:value.tamanio,edd:value.edd}
+        {
+            this.valor=value.valor.toString();
+            return { value: value.valor, type: value.type, tamanio:value.tamanio,edd:value.edd}
         }
         else{
             let er = new Error_(this.line, this.column, 'Semantico', 'No se encuentra la variable: ' + this.id);
@@ -24,5 +26,15 @@ export class Acceso extends Expresion {
         }
        
 
+    }
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoacceso"+aleatorio.toString();
+        const codigorama =` 
+        ${nombreNodoP}[label ="ACCESO"];
+        nodoval${nombreNodoP}[label="${this.valor}"];
+        ${nombreNodoP} -> nodoval${nombreNodoP};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
     }
 }

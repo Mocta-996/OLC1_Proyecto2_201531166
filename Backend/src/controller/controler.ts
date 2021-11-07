@@ -6,7 +6,9 @@ import { Funcion } from './interprete/Instruccion/Funcion';
 import { StartWith } from './interprete/Instruccion/StartWith';
 import { Writeline } from './interprete/Instruccion/Writeline';
 import {lista_errores} from './interprete/Error/lista_errores';
-
+import { ListaTabla } from './interprete/Mas/ListaTabla';
+import  {exec} from 'child_process';
+import path  from 'path';
 class rjpController{
 
     public helloWorld (req:Request,res:Response){
@@ -15,6 +17,8 @@ class rjpController{
 
     
     public interpretar (req:Request,res:Response){
+        ListaError.splice(0,ListaError.length);
+         ListaTabla.splice(0,ListaTabla.length);
         var parser = require('./interprete/interprete');
 
         const text = req.body.entrada;
@@ -51,6 +55,23 @@ class rjpController{
             }catch(error){
                 console.log(error);
             }
+            //---------------------------
+             try {
+              let codigoFinal = 'digraph G { \n principal[label="AST"];\n';
+              for (const inst of ast) 
+              {
+                const codigo = inst.getCodigoAST();
+                codigoFinal = codigoFinal + `
+                ${codigo.codigorama}\n
+                principal -> ${codigo.nombrenodo};\n`;
+              }
+               codigoFinal = codigoFinal + '}';
+                console.log( codigoFinal);
+                exec(`echo '${codigoFinal}' | dot -Tsvg -o ${path.resolve("./prueba.svg")}`);
+            } catch (error) {
+              console.log(error)
+            }
+
             let resultado =  ListaWriteline;
             let errores = lista_errores;
             let mensaje= resultado.join("\n") +"\n"+errores.join("\n");
@@ -84,8 +105,32 @@ class rjpController{
             }
         }
         res.send({lexico:error });
-        ListaError.splice(0,ListaError.length);
+        
     }
+
+    public ReporteTabla (req:Request,res:Response){
+        let tabla = ListaTabla;
+        
+       
+        res.send({tabla:tabla });
+       
+    }
+
+    /*
+    public  getAST(sentencias:[]) {
+    let codigoFinal = 'digraph G { \n principal[label="AST"];\n';
+    sentencias.forEach((sentencia) => {
+        if(sentencia.getCodigoAST()){
+            const codigo = sentencia.getCodigoAST();
+        codigoFinal = codigoFinal + `
+            ${codigo.codigo}\n
+            principal -> ${codigo.nombreNodo};\n`;
+        }
+        
+        });
+    codigoFinal = codigoFinal + '}';
+    return codigoFinal;
+    }*/
 
     /*public interpretar (req:Request,res:Response){
         var parser = require('./analizador/jpr');

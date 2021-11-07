@@ -5,6 +5,9 @@ import { Ambito } from "../Mas/Ambito";
 import { ListaError } from '../Instruccion/ListaError';
 
 export class Aritmetica extends Expresion {
+    public izquierda:string;
+    public derecha:string;
+    public operacion:string;
 
     constructor(private left: Expresion, private right: Expresion, private tipo: TipoAritmetica, line: number, column: number) {
         super(line, column);
@@ -14,8 +17,11 @@ export class Aritmetica extends Expresion {
         const leftValue = this.left.execute(ambito);
 
         const rightValue = this.right.execute(ambito);
+        this.izquierda = leftValue.value.toString();
+        this.derecha = rightValue.value.toString();
         // SUMA
         if (this.tipo == TipoAritmetica.SUMA) {
+            this.operacion ="+";
             // OPERADOR 1 ENTERO 
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: (leftValue.value + rightValue.value), type: Type.ENTERO };
@@ -102,6 +108,7 @@ export class Aritmetica extends Expresion {
             }
 
         } else if (this.tipo == TipoAritmetica.RESTA) {
+            this.operacion ="-";
             // OPERADOR 1 ENTERO 
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: (leftValue.value - rightValue.value), type: Type.ENTERO };
@@ -162,6 +169,7 @@ export class Aritmetica extends Expresion {
         // MULTIPLICACION 
         else if (this.tipo == TipoAritmetica.MULTIPLICACION) {
             // OPERADOR 1 ENTERO 
+            this.operacion ="*";
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: (leftValue.value * rightValue.value), type: Type.ENTERO };
             } else if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.DOUBLE){
@@ -198,6 +206,7 @@ export class Aritmetica extends Expresion {
         }
         // DIVISION 
         else if (this.tipo == TipoAritmetica.DIVISION) {
+            this.operacion ="/";
             // OPERADOR 1 ENTERO 
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: (leftValue.value  /rightValue.value), type: Type.DOUBLE };
@@ -234,6 +243,7 @@ export class Aritmetica extends Expresion {
             } 
         // POTENCIA 
         }else if (this.tipo == TipoAritmetica.POTENCIA) {
+            this.operacion ="^";
             // OPERADOR 1 ENTERO 
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: Math.pow(leftValue.value ,rightValue.value), type: Type.ENTERO };
@@ -256,6 +266,7 @@ export class Aritmetica extends Expresion {
         }
         // MODULO 
         else if (this.tipo == TipoAritmetica.MODULO){
+            this.operacion ="%";
             // OPERADOR 1 ENTERO 
             if(leftValue.type == Type.ENTERO &&  rightValue.type == Type.ENTERO){
                 return { value: (leftValue.value  %rightValue.value), type: Type.DOUBLE };
@@ -280,6 +291,40 @@ export class Aritmetica extends Expresion {
             ListaError.push(er);
             throw er;
         }
+    }
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        let tipo ="SUMA";
+        if(this.tipo == TipoAritmetica.RESTA){
+             tipo ="RESTA";
+        } else if(this.tipo == TipoAritmetica.MULTIPLICACION){
+                 tipo ="MULTIPLICACION";
+        }
+        else if(this.tipo == TipoAritmetica.DIVISION){
+             tipo ="DIVISION"
+        }
+        else if(this.tipo == TipoAritmetica.MENOSUNARIO){
+             tipo ="MENOSUNARIO";
+        }else if(this.tipo == TipoAritmetica.POTENCIA){
+                 tipo ="POTENCIA";
+        }
+        else if(this.tipo == TipoAritmetica.MODULO){
+                 tipo ="MODULO";
+        }
+        const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoaritmetica"+aleatorio.toString();
+        const exiz:{codigorama:string ,nombrenodo:string} =this.left.getCodigoAST();
+        const exder:{codigorama:string ,nombrenodo:string} =this.right.getCodigoAST();
+        const codigorama =` 
+        ${nombreNodoP}[label ="ARITMETICA"];
+        nodooperacion${nombreNodoP}[label="${tipo}"];
+        ${exiz.codigorama}
+        ${exder.codigorama}
+        ${nombreNodoP} ->${exiz.nombrenodo};
+        ${nombreNodoP} -> nodooperacion${nombreNodoP};
+        ${nombreNodoP} ->${exder.nombrenodo};
+        `;
+        return {codigorama:codigorama , nombrenodo:nombreNodoP.toString()}
     }
 }
 

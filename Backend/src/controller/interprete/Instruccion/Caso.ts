@@ -21,6 +21,8 @@ export class Caso  {
     public getexpresion():Expresion{
         return this.expresion;
     }
+
+    
     /*public execute(ambito: Ambito) {
         const nuevoambito = new Ambito(ambito)
         for (const inst of this.code) {

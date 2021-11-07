@@ -43,4 +43,15 @@ export class AccesoVector extends Expresion {
         
 
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        /*const aleatorio = Math.floor(Math.random() * (100-0)+0);
+        let nombreNodoP= "nodoacceso"+aleatorio.toString();
+        const codigorama =` 
+        ${nombreNodoP}[label ="ACCESO"];
+        nodoval${nombreNodoP}[label="${this.valor}"];
+        ${nombreNodoP} -> nodoval${nombreNodoP};
+        `;*/
+        return {codigorama:"vector" , nombrenodo:"accesovector"}
+    }
 }

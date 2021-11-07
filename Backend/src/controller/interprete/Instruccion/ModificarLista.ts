@@ -51,6 +51,11 @@ export class ModificarLista extends Instruccion {
             throw er;
         }
     }
+
+    public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }
 
 export enum tiposvalidos{

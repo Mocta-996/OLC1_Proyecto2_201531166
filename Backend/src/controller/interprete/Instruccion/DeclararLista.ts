@@ -41,4 +41,9 @@ export class DeclararLista extends Instruccion {
             }
         }
     }
+
+     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
+        
+        return {codigorama:"" , nombrenodo:""};
+    }
 }
