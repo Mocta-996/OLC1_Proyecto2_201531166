@@ -54,6 +54,6 @@ export class DeclararListaChar extends Instruccion {
 
      public getCodigoAST(): { codigorama: string, nombrenodo: string }{
         
-        return {codigorama:"" , nombrenodo:""};
+        return {codigorama:"nodedeclararlistachar[label=\"LISTA\"]" , nombrenodo:"nodedeclararlistachar"};
     }
 }

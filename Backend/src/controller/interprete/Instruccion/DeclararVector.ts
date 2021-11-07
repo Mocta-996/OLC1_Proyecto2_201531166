@@ -60,6 +60,6 @@ export class DeclararVector extends Instruccion {
 
      public getCodigoAST(): { codigorama: string, nombrenodo: string }{
         
-        return {codigorama:"" , nombrenodo:""};
+        return {codigorama:"nodedeclararvector[label=\"VECTOR\"]" , nombrenodo:"nodedeclararvector"};
     }
 }

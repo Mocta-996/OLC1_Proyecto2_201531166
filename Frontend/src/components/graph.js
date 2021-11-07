@@ -1,12 +1,13 @@
-import { Graphviz } from 'graphviz-react';
+import React, { useEffect } from "react";
 
 
-//const Graphviz = dynamic(() => import('graphviz-react'), { ssr: false });
+const Graph = ({ dot }) => {
+  
+  useEffect(() => {
+    d3.select("#graph-body").graphviz().renderDot(dot);
+  }, [dot]);
 
-const graph = () => {
-  const dot = 'graph{a--b}';
+  return <div id="graph-body"></div>;
+};
 
-  return <Graphviz dot={dot} />;
-}
-
-export default graph;
+export default Graph;

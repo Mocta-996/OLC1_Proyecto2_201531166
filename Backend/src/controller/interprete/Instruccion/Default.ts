@@ -13,7 +13,7 @@ export class Default extends Instruccion {
 
     public getCodigoAST(): { codigorama: string, nombrenodo: string }{
         
-        return {codigorama:"" , nombrenodo:""};
+       return {codigorama:"nodedefault[label=\"DEFAULT\"]" , nombrenodo:"nodedefault"};
     }
 
 }

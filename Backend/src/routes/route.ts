@@ -11,6 +11,7 @@ router.post('/interpretar',controller.interpretar);
 router.post('/ReporteErrores',controller.ReporteErr);
 
 router.post('/TablaSimbolos',controller.ReporteTabla);
+router.post('/Grafo',controller.ReporteGrafo);
 
 
 export default router;

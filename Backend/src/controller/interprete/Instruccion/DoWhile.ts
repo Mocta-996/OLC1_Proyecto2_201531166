@@ -46,6 +46,6 @@ export class DoWhile extends Instruccion {
 
      public getCodigoAST(): { codigorama: string, nombrenodo: string }{
         
-        return {codigorama:"" , nombrenodo:""};
+        return {codigorama:"nodedeclarardowhile[label=\"DO WHILE\"]" , nombrenodo:"nodedeclarardowhile"};
     }
 }

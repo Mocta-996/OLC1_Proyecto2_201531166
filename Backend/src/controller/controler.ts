@@ -9,7 +9,9 @@ import {lista_errores} from './interprete/Error/lista_errores';
 import { ListaTabla } from './interprete/Mas/ListaTabla';
 import  {exec} from 'child_process';
 import path  from 'path';
+let archivodot="";
 class rjpController{
+    
 
     public helloWorld (req:Request,res:Response){
         res.send("hola soy yo de nuevo");
@@ -67,7 +69,7 @@ class rjpController{
               }
                codigoFinal = codigoFinal + '}';
                 console.log( codigoFinal);
-                exec(`echo '${codigoFinal}' | dot -Tsvg -o ${path.resolve("./prueba.svg")}`);
+                archivodot = codigoFinal;
             } catch (error) {
               console.log(error)
             }
@@ -87,6 +89,7 @@ class rjpController{
             });
         }
     }
+
 
 
     public ReporteErr (req:Request,res:Response){
@@ -110,10 +113,12 @@ class rjpController{
 
     public ReporteTabla (req:Request,res:Response){
         let tabla = ListaTabla;
-        
+        res.send({tabla:tabla }); 
+    }
+
+     public ReporteGrafo (req:Request,res:Response){
        
-        res.send({tabla:tabla });
-       
+        res.send({grafo:archivodot }); 
     }
 
     /*

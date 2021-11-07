@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
-// Graph from "./components/graph";
+import Graph from "./components/graph";
 
 
 const url = 'http://localhost:3001/';
@@ -18,7 +18,8 @@ function App() {
   const [js, setJs] = useState("");
   const [srcDoc, setsrcDoc] = useState("");
   const [ errores, setErrores] = useState([]);
-   const [ tabla, setTabla] = useState([]);
+  const [ tabla, setTabla] = useState([]);
+  const [ grafo, setGrafo] = useState("");
   //{lexico:"",sintactico:"",semantico:""}
 
   useEffect(() => {
@@ -78,6 +79,21 @@ function App() {
       
       console.log(json);
       setErrores(json.lexico)
+      
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+    // peticion para obtener tabla de simbolos
+  const fetchGrafo = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/Grafo',requestOptions);
+      const json = await response.json();
+      
+      console.log(json);
+      setGrafo(json.grafo)
+      
       
     } catch (error) {
       console.log("error", error);
@@ -154,7 +170,7 @@ function App() {
           <Grid item xs={10} >
             <Stack direction="row" spacing={2}>
               <Button variant="outlined" onClick={()=>fetchErrores()} >Reporte Errores </Button>
-              <Button variant="outlined">Arbol AST</Button>
+              <Button variant="outlined"  onClick={()=>fetchGrafo()} >Arbol AST</Button>
               <Button variant="outlined" onClick={()=>fetchTabla()}>Tabla de simbolos</Button>
             </Stack>
           </Grid>
@@ -246,6 +262,16 @@ function App() {
         </div> 
 
         <div>
+        <Grid container>
+        <Box display="flex" flexDirection="row">
+                <Box>
+                  <p className="para" style={{ marginTop: 15, marginLeft: 10 }}>
+                  Grafica AST
+                  </p>
+                </Box>                
+          </Box>
+        </Grid>
+        <Graph dot={grafo}/>
         </div>     
       </div>
      
